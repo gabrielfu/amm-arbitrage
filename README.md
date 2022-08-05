@@ -7,7 +7,7 @@ This model does not apply to Uniswap V3 which is defined by **concentrated liqui
 
 ### Constant Product Formula
 Suppose a trader is swapping $\delta_a$ amount of token $A$ for $\delta_b$ of token $B$, where the pool liquidites of $A$ and $B$ are $a$ and $b$ respectively, then the contant product formula holds true:
-$$ a \cdot b = (a + r_a\delta_a) \cdot (b - \frac{\delta_b}{r_b}) $$
+$$a \cdot b = (a + r_a\delta_a) \cdot (b - \frac{\delta_b}{r_b})$$
 where $r_a$ and $r_b$ denote the commission fee in $A$ and $B$, respectively. In Uniswap V2, $r_a=0.997$ and $r_b=1$. From here, we will simply use $r=r_a$ and omit $r_b$.
 
 Solving the equation gives
