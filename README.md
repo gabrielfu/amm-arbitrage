@@ -35,18 +35,18 @@ $$\delta_a' = \frac{r^2 a_2 b_1 \delta_a}{a_1 b_2 + r b_2 \delta_a + r^2 b_1 \de
 $$\delta_a' = \frac{r (r a_2 b_1) \delta_a}{a_1 b_2 + (b_2 + r b_1) r \delta_a}$$
 $$\delta_a' = \frac{r \frac{r a_2 b_1}{b_2 + r b_1} \delta_a}{\frac{a_1 b_2}{b_2 + r b_1} + r \delta_a}$$
 
-We can see the two transactions can be considered as a single transaction through an equivalent pool, with the equivalent liquidity of $A$ being $a' = \frac{a_1 b_2}{b_2 + r b_1}$ and $B$ being $b' = \frac{r a_2 b_1}{b_2 + r b_1}$.
+We can see the two transactions can be considered as a single transaction through an equivalent pool (with both assets being $A$), with the equivalent liquidity of the selling $A$ being $a = \frac{a_1 b_2}{b_2 + r b_1}$ and buying $A$ being $a' = \frac{r a_2 b_1}{b_2 + r b_1}$.
 
 Thus, the total arbitrage profit is 
-$$P = P(\delta_a) = \delta_a' - \delta_a=\frac{r b' \delta_a}{a' + r \delta_a}-\delta_a$$
+$$P = P(\delta_a) = \delta_a' - \delta_a=\frac{r a' \delta_a}{a + r \delta_a}-\delta_a$$
 
-Note that $r, b', a' > 0$. Therefore, in the domain of $\delta_a \in [0, \inf)$, $P(\delta_a)$ is a unimodal function with a single maximum. Thus, the optimal trading amount $\delta_a^\ast$ can be found from the following equation:
+Note that $r, a, a' > 0$. Therefore, in the domain of $\delta_a \in [0, \inf)$, $P(\delta_a)$ is a unimodal function with a single maximum. Thus, the optimal trading amount $\delta_a^\ast$ can be found from the following equation:
 $$\left . \frac{\partial P}{\partial \delta_a} \right |_{\delta_a = \delta_a^\ast} = 0$$
 
 Therefore,
-$$\left . \frac{\partial P}{\partial \delta_a} \right |_{\delta_a = \delta_a^\ast} = \frac{r a' b'}{(a' + r \delta_a)^2} - 1 = 0$$
-$$r a' b' = (a' + r \delta_a)^2$$
-$$\delta_a=\frac{\sqrt{r a' b'}-a'}{r}$$
+$$\left . \frac{\partial P}{\partial \delta_a} \right |_{\delta_a = \delta_a^\ast} = \frac{r a a'}{(a + r \delta_a)^2} - 1 = 0$$
+$$r a a' = (a + r \delta_a)^2$$
+$$\delta_a=\frac{\sqrt{r a a'}-a}{r}$$
 
 Note that the positive root is sufficient as we have to satisfy the constraint $\delta_a>=0$.
 
