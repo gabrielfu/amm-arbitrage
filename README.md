@@ -46,7 +46,9 @@ $$\left . \frac{\partial P}{\partial \delta_a} \right |_{\delta_a = \delta_a^\as
 Therefore,
 $$\left . \frac{\partial P}{\partial \delta_a} \right |_{\delta_a = \delta_a^\ast} = \frac{r a' b'}{(a' + r \delta_a)^2} - 1 = 0$$
 $$r a' b' = (a' + r \delta_a)^2$$
-$$\delta_a=\frac{\pm\sqrt{r a' b'}-a'}{r}$$
+$$\delta_a=\frac{\sqrt{r a' b'}-a'}{r}$$
+
+Note that the positive root is sufficient as we have to satisfy the constraint $\delta_a>=0$.
 
 ## Reference
 - Wang, Y. et al. (2021). Cyclic arbitrage in decentralized exchange markets. SSRN Electronic Journal. https://doi.org/10.2139/ssrn.3834535 
