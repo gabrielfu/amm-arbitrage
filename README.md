@@ -11,12 +11,10 @@ $$ a \cdot b = (a + r_a\delta_a) \cdot (b - \frac{\delta_b}{r_b}) $$
 where $r_a$ and $r_b$ denote the commission fee in $A$ and $B$, respectively. In Uniswap V2, $r_a=0.997$ and $r_b=1$. From here, we will simply use $r=r_a$ and omit $r_b$.
 
 Solving the equation gives
-$$ \delta_b=\frac{r b \delta_a}{a + r \delta_a} $$
+$$\delta_b=\frac{r b \delta_a}{a + r \delta_a}$$
 which means the change in liquidity follows:
-$$ \begin{cases}
-a \rightarrow a + r\delta_a \\
-b \rightarrow b - \frac{r b \delta_a}{a + r \delta_a}
-\end{cases} $$
+$$a \rightarrow a + r\delta_a$$
+$$b \rightarrow b - \frac{r b \delta_a}{a + r \delta_a}$$
 
 ### Arbitrage
 Let's consider an arbitrage opportunity between two AMM pools of the same pair $A$ and $B$, e.g., Uniswap V2 and SushiSwap. The two pools have their own liquidities, as followed.
@@ -29,20 +27,15 @@ Let's consider an arbitrage opportunity between two AMM pools of the same pair $
 We will be swapping $\delta_a$ amount of $A$ from the base pool. 
 
 From the above equations, the amount of $B$ we get is:
-$$ \delta_b = \frac{r b_1 \delta_a}{a_1 + r \delta_a} $$
+$$\delta_b = \frac{r b_1 \delta_a}{a_1 + r \delta_a}$$
 
 Then, we will be swapping all $B$ for $A$ in the quote pool, getting this amount of $A$:
-$$ 
-\begin{aligned} 
-\delta_a' & = \frac{r a_2 \delta_b}{b_2 + r \delta_b} \\
-& = \frac{r^2 a_2 b_1 \delta_a}{a_1 b_2 + r b_2 \delta_a + r^2 b_1 \delta} \\
-& = \frac{r (r a_2 b_1) \delta_a}{a_1 b_2 + (b_2 + r b_1) r \delta_a}  \\
-& = \frac{r \frac{r a_2 b_1}{b_2 + r b_1} \delta_a}{\frac{a_1 b_2}{b_2 + r b_1} + r \delta_a} 
-\end{aligned} 
-$$
+$$\delta_a' = \frac{r a_2 \delta_b}{b_2 + r \delta_b}$$
+$$\delta_a' = \frac{r^2 a_2 b_1 \delta_a}{a_1 b_2 + r b_2 \delta_a + r^2 b_1 \delta}$$
+$$\delta_a' = \frac{r (r a_2 b_1) \delta_a}{a_1 b_2 + (b_2 + r b_1) r \delta_a}$$
+$$\delta_a' = \frac{r \frac{r a_2 b_1}{b_2 + r b_1} \delta_a}{\frac{a_1 b_2}{b_2 + r b_1} + r \delta_a}$$
 
 We can see the two transactions can be considered as a single transaction through an equivalent pool, with the equivalent liquidity of $A$ being $a' = \frac{a_1 b_2}{b_2 + r b_1}$ and $B$ being $b' = \frac{r a_2 b_1}{b_2 + r b_1}$.
 
 Thus, the total arbitrage profit is 
-$$ P = \delta_a' - \delta_a=\frac{r b' \delta_a}{a' + r \delta_a}-\delta_a$$
-
+$$P = \delta_a' - \delta_a=\frac{r b' \delta_a}{a' + r \delta_a}-\delta_a$$
