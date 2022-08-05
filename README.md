@@ -38,4 +38,13 @@ $$\delta_a' = \frac{r \frac{r a_2 b_1}{b_2 + r b_1} \delta_a}{\frac{a_1 b_2}{b_2
 We can see the two transactions can be considered as a single transaction through an equivalent pool, with the equivalent liquidity of $A$ being $a' = \frac{a_1 b_2}{b_2 + r b_1}$ and $B$ being $b' = \frac{r a_2 b_1}{b_2 + r b_1}$.
 
 Thus, the total arbitrage profit is 
-$$P = \delta_a' - \delta_a=\frac{r b' \delta_a}{a' + r \delta_a}-\delta_a$$
+$$P = P(\delta_a) = \delta_a' - \delta_a=\frac{r b' \delta_a}{a' + r \delta_a}-\delta_a$$
+
+Note that $r, b', a' > 0$. Therefore, in the domain of $\delta_a \in [0, \inf)$, $P(\delta_a)$ is a unimodal function with a single maximum. Thus, the optimal trading amount $\delta_a^*$ can be found from the following equation:
+$$\left . \frac{\partial P}{\partial \delta_a} \right |_{\delta_a = \delta_a^*} = 0$$
+
+Therefore,
+$$\left . \frac{\partial P}{\partial \delta_a} \right |_{\delta_a = \delta_a^*} = \frac{r a' b'}{(a' + r \delta_a)^2} - 1 = 0$$
+$$r a' b' = (a' + r \delta_a)^2$$
+$$\delta_a=\frac{\pm\sqrt{r a' b'}-a'}{r}$$
+
