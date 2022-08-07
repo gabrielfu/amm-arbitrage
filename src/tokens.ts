@@ -31,6 +31,13 @@ const quoteTokens: Token[] = [
     { symbol: 'UNI', address: '0x1f9840a85d5af5bf1d1762f925bdaddc4201f984' },
 ];
 
+var arbitragePairs: ArbitragePair[] = [];
+
+/** Please call initializePairs() before calling this function */
+export function getArbitragePairs() {
+    return arbitragePairs;
+}
+
 export function getBaseTokens() {
     return baseTokens;
 }
@@ -43,7 +50,11 @@ export function getFactories() {
     return factories;
 }
 
-export async function getAllPairs(provider: ethers.providers.Provider) {
+/**
+ * Initialize all available arbitrage pairs
+ * @param provider 
+ */
+export async function initializePairs(provider: ethers.providers.Provider) {
     // form token pairs [token0, token1]
     let allTokenPairs: [string, string][] = [];
     baseTokens.forEach((b) => {
@@ -78,7 +89,6 @@ export async function getAllPairs(provider: ethers.providers.Provider) {
     await Promise.all(promises);
     
     // flatten allAmms
-    let allPairs: ArbitragePair[] = [];
     allTokenPairs.forEach(([t0, t1], i) => {
         let amms = allAmms[i];
         for (var j=0; j < amms.length; j += 1) {
@@ -89,9 +99,8 @@ export async function getAllPairs(provider: ethers.providers.Provider) {
                     pair0: amms[j],
                     pair1: amms[k]
                 }
-                allPairs.push(ap);
+                arbitragePairs.push(ap);
             }
         }
     });
-    return allPairs;
 }
