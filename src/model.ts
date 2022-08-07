@@ -1,12 +1,12 @@
-import { ethers } from "ethers";
+import { BigNumber as BN } from "ethers";
 
-const BN_BASE = ethers.BigNumber.from(1000);
-const ZERO = ethers.BigNumber.from(0);
-const ONE = ethers.BigNumber.from(1);
-const TWO = ethers.BigNumber.from(2);
+const BN_BASE = BN.from(1000);
+const ZERO = BN.from(0);
+const ONE = BN.from(1);
+const TWO = BN.from(2);
 
 /** sqrt() function for BN https://github.com/dholms/bn-sqrt */
-function bnSqrt(num: ethers.BigNumber): ethers.BigNumber {
+function bnSqrt(num: BN): BN {
 	if(num.lt(ZERO)) {
 		throw new Error("Sqrt only works on non-negtiave inputs");
 	}
@@ -26,7 +26,7 @@ function bnSqrt(num: ethers.BigNumber): ethers.BigNumber {
 }
 
 /** Calculate the optimal trading amount for an arbitrage */
-export function calculateAmountIn(a1: ethers.BigNumber, b1: ethers.BigNumber, a2: ethers.BigNumber, b2: ethers.BigNumber, c: ethers.BigNumber): ethers.BigNumber {
+export function calculateAmountIn(a1: BN, b1: BN, a2: BN, b2: BN, c: BN): BN {
     let r = BN_BASE.sub(c);
     let a = a1.mul(b2).div(b1.mul(r).div(BN_BASE).add(b2));
     let a_ = a2.mul(b1).mul(r).div(BN_BASE).div(b1.mul(r).div(BN_BASE).add(b2));
