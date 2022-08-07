@@ -1,3 +1,6 @@
+# typescipt compiled js
+src/**/*.js
+
 # Logs
 logs
 *.log
