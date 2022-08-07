@@ -8,7 +8,6 @@ let factoryIface = new ethers.utils.Interface(factoryAbi);
 const factories: Factory[] = [
     { name: "UniswapV2", address: "0x5c69bee701ef814a2b6a3edd4b1652cb9cc5aa6f" },
     { name: "Sushiswap", address: "0xc0aee478e3658e2610c5f7a4a2e1777ce9e4f2ac" },
-    { name: "BTswap", address: "0x1fed2e360a5afb2ac4b047102a7012a57f3c8cab" },
 ];
 
 const baseTokens: Token[] = [
