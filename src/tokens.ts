@@ -44,7 +44,7 @@ export function getFactories() {
 }
 
 export async function getAllPairs(provider: ethers.providers.Provider) {
-    // form token pairs
+    // form token pairs [token0, token1]
     let allTokenPairs: [string, string][] = [];
     baseTokens.forEach((b) => {
         quoteTokens.forEach((q) => {
@@ -53,27 +53,31 @@ export async function getAllPairs(provider: ethers.providers.Provider) {
             }
         });
     });
-    // return allTokenPairs;
 
+    // for each token pair, we find all AMMs that support this pair
+    // by calling the AMM factory getPair() method to get the pair address
+    // and store the pair addresses in allAmms
     let allAmms: string[][] = allTokenPairs.map(_ => []);
     let promises: Promise<any>[] = [];
+    let factoryContracts = factories.map(f => new ethers.Contract(f.address, factoryIface, provider));
     allTokenPairs.forEach(([t0, t1], i) => {
         let _i = i;
-        for (var f of factories) {
+        factoryContracts.forEach(f => {
             let factoryContract = new ethers.Contract(f.address, factoryIface, provider);
             let p = factoryContract.functions.getPair(t0, t1)
                 .then((resp) => {
                     let address: string = resp[0].toLowerCase();
+                    // if pair exists
                     if (address != "0x0000000000000000000000000000000000000000") {
                         allAmms[_i].push(address);
                     };
                 });
             promises.push(p);
-        }
+        });
     });
     await Promise.all(promises);
     
-
+    // flatten allAmms
     let allPairs: ArbitragePair[] = [];
     allTokenPairs.forEach(([t0, t1], i) => {
         let amms = allAmms[i];

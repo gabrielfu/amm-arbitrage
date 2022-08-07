@@ -9,7 +9,7 @@ export interface Pair {
     readonly token1: Token;
 }
 
-/** Represents a pair of base pool & quote pool to perform arbitrage on */
+/** Represents a pair of AMM pairs to perform arbitrage on for a pair of baseToken & quoteToken */
 export interface ArbitragePair {
     readonly baseToken: string;
     readonly quoteToken: string;
