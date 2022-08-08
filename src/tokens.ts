@@ -120,12 +120,3 @@ export async function getReserves(pair: string, provider: ethers.providers.Provi
     let reserve1 = BN.from(reserves._reserve1);
     return [reserve0, reserve1];
 }
-
-export async function batchGetReserves(arbitragePairs: ArbitragePair[], provider: ethers.providers.Provider) {
-    let 
-    let promises: Promise<any>[] = [];
-    arbitragePairs.forEach(ap => {
-        let p0 = getReserves(ap.pair0, provider)
-            .then()
-    })
-}

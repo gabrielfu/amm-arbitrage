@@ -1,6 +1,6 @@
 import fs from "fs";
 import pool from '@ricokahler/pool';
-import { ethers, providers, BigNumber as BN } from "ethers";
+import { ethers, BigNumber as BN } from "ethers";
 import { calculateAmountIn, calculateProfit } from "./model";
 import { initializePairs, getArbitragePairs, getReserves } from "./tokens";
 import { ArbitragePair, Pair } from "./types";
