@@ -58,24 +58,24 @@ async function runOnePair(ap: ArbitragePair) {
         pair0.address, 
         pair1.address,
         amountIn,
-        )
-        let receipt = await response.wait();
-        console.log(`tx submmited hash=${receipt.transactionHash} status=${receipt.status}`);
-    }
+    );
+    let receipt = await response.wait();
+    console.log(`tx submmited hash=${receipt.transactionHash} status=${receipt.status}`);
+}
+
+async function main() {
+    // 
+    await initializePairs(provider);
+    const arbitragePairs = getArbitragePairs();
     
-    async function main() {
-        // 
-        await initializePairs(provider);
-        const arbitragePairs = getArbitragePairs();
-        
-        while (true) {
-            await pool({
-                collection: arbitragePairs,
-                task: runOnePair,
-                maxConcurrency: 3,
-            });
-            await new Promise((resolve) => setTimeout(resolve, 500));
-        }
+    while (true) {
+        await pool({
+            collection: arbitragePairs,
+            task: runOnePair,
+            maxConcurrency: 3,
+        });
+        await new Promise((resolve) => setTimeout(resolve, 500));
     }
-    
-    main();
+}
+
+main();
