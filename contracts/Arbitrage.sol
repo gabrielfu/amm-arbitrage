@@ -32,6 +32,10 @@ contract Arbitrage {
         owner = payable(msg.sender);
     }
 
+    function getOwner() public view returns(address) {
+        return owner;
+    }
+
     function execute(
         address baseToken,
         address quoteToken,

@@ -46,28 +46,34 @@ async function deployMockContracts() {
     // set reserves
     await baseToken.setVariable("_balances", {
         [pair0.address]: 1_000_000,
-        [pair1.address]: 1_000_000,
+        [pair1.address]: 1_200_000,
     })
     await quoteToken.setVariable("_balances", {
         [pair0.address]: 1_000_000,
-        [pair1.address]: 1_000_000,
+        [pair1.address]: 800_000,
     })
     // sync pair reserves
     await pair0.sync();
     await pair1.sync();
 
-    return { baseToken, quoteToken, pair0, pair1 };
+    // expected profit
+    let amountIn = 5000;
+    let expectedProfit = 2372;
+
+    return { baseToken, quoteToken, pair0, pair1, amountIn, expectedProfit };
 }
 
 
 describe("Arbitrage", function() {
 
     describe("Deployment", function() {
-
+        it("Should set the right owner", async function () {
+            const { arbitrage, owner } = await loadFixture(deployFixture);
+            expect(await arbitrage.getOwner()).to.equal(owner.address);
+        });
     });
 
-
-    describe("Arbitrage", function() {
+    describe("Execute", function() {
         let arbitrage: Contract;
         let owner: any;
         let otherAccount: any;
@@ -76,6 +82,8 @@ describe("Arbitrage", function() {
         let quoteToken: MockContract;
         let pair0: MockContract;
         let pair1: MockContract;
+        let amountIn: number;
+        let expectedProfit: number;
 
         beforeEach(async function() {
             const fixture = await loadFixture(deployFixture);
@@ -88,10 +96,47 @@ describe("Arbitrage", function() {
             quoteToken = mock.quoteToken;
             pair0 = mock.pair0;
             pair1 = mock.pair1;
+            amountIn = mock.amountIn;
+            expectedProfit = mock.expectedProfit;
+        });
+
+        it("Should revert when called by non owner", async function() {
+            await expect(arbitrage.connect(otherAccount).execute(
+                baseToken.address, 
+                quoteToken.address, 
+                pair0.address, 
+                pair1.address,
+                amountIn
+            )).to.be.revertedWith("UNAUTHORIZED");
+        });
+
+        it("Should revert when unprofitable", async function() {
+            await baseToken.setVariable("_balances", {
+                [pair0.address]: 1_000_000,
+                [pair1.address]: 800_000,
+            })
+            await pair1.sync();
+            await expect(arbitrage.execute(
+                baseToken.address, 
+                quoteToken.address, 
+                pair0.address, 
+                pair1.address,
+                amountIn
+            )).to.be.revertedWith("UNPROFITABLE");
+            expect(await baseToken.balanceOf(arbitrage.address)).to.equal(0);
+            expect(await baseToken.balanceOf(owner.address)).to.equal(0);
         });
 
         it("Should trade", async function() {
-
+            await expect(arbitrage.execute(
+                baseToken.address, 
+                quoteToken.address, 
+                pair0.address, 
+                pair1.address,
+                amountIn
+            )).to.not.be.reverted;
+            expect(await baseToken.balanceOf(arbitrage.address)).to.equal(0);
+            expect(await baseToken.balanceOf(owner.address)).to.equal(expectedProfit);
         });
     });
 
