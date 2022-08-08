@@ -6,6 +6,15 @@ import './interfaces/IPair.sol';
 import './libraries/SafeMath.sol';
 import './libraries/TransferHelper.sol';
 
+struct CallbackData {
+    address baseToken;
+    address quoteToken;
+    address pair0;
+    address pair1;
+    uint256 baseAmountIn;
+    uint256 quoteAmount;
+}
+
 contract Arbitrage {
     using SafeMath for uint256;
 
@@ -20,7 +29,7 @@ contract Arbitrage {
     }
 
     constructor() {
-        owner = msg.sender;
+        owner = payable(msg.sender);
     }
 
     function execute(
@@ -31,24 +40,40 @@ contract Arbitrage {
         uint256 baseAmountIn
     ) public onlyOwner {
         // calculate the swapping amounts 
-        (uint256 r0base, r0quote) = getReserves(pair0, baseToken, quoteToken);
-        (uint256 r1quote, r1base) = getReserves(pair1, quoteToken, baseToken);
-        uint256 quoteAmount = getAmountOut(baseAmountIn, r0base, r0quote);
-        uint256 baseAmountOut = getAmountOut(quoteAmount, r1quote, r1base);
+        uint256 quoteAmount;
+        uint256 baseAmountOut;
+        {
+        (uint256 r0base, uint256 r0quote) = getReserves(pair0, baseToken, quoteToken);
+        (uint256 r1quote, uint256 r1base) = getReserves(pair1, quoteToken, baseToken);
+        quoteAmount = getAmountOut(baseAmountIn, r0base, r0quote);
+        baseAmountOut = getAmountOut(quoteAmount, r1quote, r1base);
+        }
 
         require(baseAmountOut > baseAmountIn, "UNPROFITABLE");
         uint256 balanceBefore = IERC20(baseToken).balanceOf(address(this));
 
         // flash swap to get base token from pair1 & repay quote token in callback
+        uint256 amount0Out;
+        uint256 amount1Out;
+        {
         (address token0, ) = sortTokens(baseToken, quoteToken);
-        (uint256 amount0Out, uint256 amount1Out) = quoteToken == token0
+        (amount0Out, amount1Out) = quoteToken == token0
             ? (uint256(0), baseAmountOut)
             : (baseAmountOut, uint256(0));
+        }
+
+        CallbackData memory callbackData;
+        callbackData.baseToken = baseToken;
+        callbackData.quoteToken = quoteToken;
+        callbackData.pair0 = pair0;
+        callbackData.pair1 = pair1;
+        callbackData.baseAmountIn = baseAmountIn;
+        callbackData.quoteAmount = quoteAmount;
         IPair(pair1).swap(
             amount0Out,
             amount1Out,
             address(this),
-            abi.encode(baseToken, quoteToken, pair0, pair1, baseAmountIn, quoteAmount)
+            abi.encode(callbackData)
         );
 
         // validate the profit
@@ -72,25 +97,18 @@ contract Arbitrage {
         bytes calldata data
     ) internal {
         // decode data
-        (
-            address baseToken, 
-            address quoteToken,
-            address pair0,
-            address pair1,
-            uint256 baseAmountIn,
-            uint256 quoteAmount
-        ) = abi.decode(data, (address, address, address, address, uint256, uint256));
+        CallbackData memory cb = abi.decode(data, (CallbackData));
 
         // swap base for quote in pair0 and repay pair1 in quote token
-        TransferHelper.safeTransfer(baseToken, pair0, baseAmountIn);
-        (address token0, ) = sortTokens(baseToken, quoteToken);
-        (uint256 amount0Out, uint256 amount1Out) = baseToken == token0
-            ? (uint256(0), quoteAmount)
-            : (quoteAmount, uint256(0));
-        IPair(pair0).swap(
+        TransferHelper.safeTransfer(cb.baseToken, cb.pair0, cb.baseAmountIn);
+        (address token0, ) = sortTokens(cb.baseToken, cb.quoteToken);
+        (uint256 amount0Out, uint256 amount1Out) = cb.baseToken == token0
+            ? (uint256(0), cb.quoteAmount)
+            : (cb.quoteAmount, uint256(0));
+        IPair(cb.pair0).swap(
             amount0Out,
             amount1Out,
-            pair1,
+            cb.pair1,
             new bytes(0)
         );
     }

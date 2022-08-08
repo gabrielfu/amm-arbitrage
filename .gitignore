@@ -1,6 +1,11 @@
 # typescipt compiled js
 src/**/*.js
 
+# hardhat artifacts
+artifacts/
+cache/
+typechain-types/
+
 # Logs
 logs
 *.log
