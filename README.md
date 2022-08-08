@@ -57,7 +57,7 @@ $$\delta_b = \frac{r b_1 \delta_a}{a_1 + r \delta_a}$$
 
 Then, we will be swapping all $B$ for $A$ in the quote pool, getting this amount of $A$:
 $$\delta_a' = \frac{r a_2 \delta_b}{b_2 + r \delta_b}$$
-$$\delta_a' = \frac{r^2 a_2 b_1 \delta_a}{a_1 b_2 + r b_2 \delta_a + r^2 b_1 \delta}$$
+$$\delta_a' = \frac{r^2 a_2 b_1 \delta_a}{a_1 b_2 + r b_2 \delta_a + r^2 b_1 \delta_a}$$
 $$\delta_a' = \frac{r (r a_2 b_1) \delta_a}{a_1 b_2 + (b_2 + r b_1) r \delta_a}$$
 $$\delta_a' = \frac{r \frac{r a_2 b_1}{b_2 + r b_1} \delta_a}{\frac{a_1 b_2}{b_2 + r b_1} + r \delta_a}$$
 
