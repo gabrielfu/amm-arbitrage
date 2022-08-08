@@ -51,7 +51,12 @@ async function runOnePair(ap: ArbitragePair) {
         return;
     }
     
-    console.log(`executing arbitrage base=${ap.baseToken.symbol} quote=${ap.quoteToken.symbol} pair0=${pair0} pair1=${pair1}`);
+    console.log(`executing arbitrage`,
+                `base=${ap.baseToken.symbol}`,
+                `quote=${ap.quoteToken.symbol}`,
+                `pair0=${pair0}`,
+                `pair1=${pair1}`,
+                `profit=${profit.toString()}`);
     let response = await arbitrage.functions.execute(
         ap.baseToken.address, 
         ap.quoteToken.address, 
