@@ -4,11 +4,12 @@ import { ethers, BigNumber as BN } from "ethers";
 import { calculateAmountIn, calculateProfit } from "./model";
 import { initializePairs, getArbitragePairs, getReserves } from "./tokens";
 import { ArbitragePair, Pair } from "./types";
+import config from "../config";
 
-const INFURA_API_KEY = "";
+const INFURA_API_KEY = config.providers.infura;
 const provider = new ethers.providers.InfuraProvider("homestead", INFURA_API_KEY);
 
-const contractAddress = "";
+const contractAddress = config.contractAddress;
 const contractAbi = JSON.parse(fs.readFileSync("./src/abi/Arbitrage.json", 'utf-8'));
 const contractIface = new ethers.utils.Interface(contractAbi);
 const arbitrage = new ethers.Contract(contractAddress, contractIface, provider);
