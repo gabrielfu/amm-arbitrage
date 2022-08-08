@@ -56,7 +56,7 @@ async function runOnePair(ap: ArbitragePair) {
                 `quote=${ap.quoteToken.symbol}`,
                 `pair0=${pair0}`,
                 `pair1=${pair1}`,
-                `profit=${profit.toString()}`);
+                `profit=${profit.toNumber() / 1e9} Gwei`);
     let response = await arbitrage.functions.execute(
         ap.baseToken.address, 
         ap.quoteToken.address, 
