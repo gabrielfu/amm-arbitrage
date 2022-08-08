@@ -33,3 +33,11 @@ export function calculateAmountIn(a1: BN, b1: BN, a2: BN, b2: BN, c: BN): BN {
     let d = bnSqrt(a.mul(a_).mul(r).div(BN_BASE)).sub(a).mul(BN_BASE).div(r);
     return d.gt(ZERO) ? d : ZERO;
 }
+
+export function calculateProfit(delta: BN, a1: BN, b1: BN, a2: BN, b2: BN, c: BN): BN {
+    let r = BN_BASE.sub(c);
+    let a = a1.mul(b2).div(b1.mul(r).div(BN_BASE).add(b2));
+    let a_ = a2.mul(b1).mul(r).div(BN_BASE).div(b1.mul(r).div(BN_BASE).add(b2));
+	let delta_ = a_.mul(delta).mul(r).div(BN_BASE).div(delta.mul(r).div(BN_BASE).add(a));
+	return delta_.sub(delta);
+}

@@ -1,9 +1,12 @@
-import { ethers } from "ethers";
-import { Token, Pair, ArbitragePair, Factory } from "./types";
 import fs from "fs";
+import { ethers, BigNumber as BN } from "ethers";
+import { Token, Pair, ArbitragePair, Factory } from "./types";
 
-let factoryAbi = JSON.parse(fs.readFileSync("./src/abi/Factory.json", 'utf-8'));
-let factoryIface = new ethers.utils.Interface(factoryAbi);
+const factoryAbi = JSON.parse(fs.readFileSync("./src/abi/Factory.json", 'utf-8'));
+const factoryIface = new ethers.utils.Interface(factoryAbi);
+
+const pairAbi = JSON.parse(fs.readFileSync("./src/abi/Pair.json", 'utf-8'));
+const pairIface = new ethers.utils.Interface(pairAbi);
 
 const factories: Factory[] = [
     { name: "UniswapV2", address: "0x5c69bee701ef814a2b6a3edd4b1652cb9cc5aa6f" },
@@ -55,11 +58,11 @@ export function getFactories() {
  */
 export async function initializePairs(provider: ethers.providers.Provider) {
     // form token pairs [token0, token1]
-    let allTokenPairs: [string, string][] = [];
+    let allTokenPairs: [Token, Token][] = [];
     baseTokens.forEach((b) => {
         quoteTokens.forEach((q) => {
             if (b.address != q.address) {
-                allTokenPairs.push([b.address, q.address]);
+                allTokenPairs.push([b, q]);
             }
         });
     });
@@ -74,7 +77,7 @@ export async function initializePairs(provider: ethers.providers.Provider) {
         let _i = i;
         factoryContracts.forEach(f => {
             let factoryContract = new ethers.Contract(f.address, factoryIface, provider);
-            let p = factoryContract.functions.getPair(t0, t1)
+            let p = factoryContract.functions.getPair(t0.address, t1.address)
                 .then((resp: string[]) => {
                     let address: string = resp[0].toLowerCase();
                     // if pair exists
@@ -92,14 +95,37 @@ export async function initializePairs(provider: ethers.providers.Provider) {
         let amms = allAmms[i];
         for (var j=0; j < amms.length; j += 1) {
             for (var k=j+1; k < amms.length; k += 1) {
+                let [_t0, _t1] = sortTokens(t0.address, t1.address);
                 let ap: ArbitragePair = {
                     baseToken: t0,
                     quoteToken: t1,
-                    pair0: amms[j],
-                    pair1: amms[k]
+                    pair0: { address: amms[j], token0: _t0, token1: _t1 },
+                    pair1: { address: amms[k], token0: _t0, token1: _t1 },
                 }
                 arbitragePairs.push(ap);
             }
         }
     });
+}
+
+function sortTokens(tokenA: string, tokenB: string): [string, string] {
+    let [token0, token1] = tokenA < tokenB ? [tokenA, tokenB] : [tokenB, tokenA];
+    return [token0, token1];
+}
+
+export async function getReserves(pair: string, provider: ethers.providers.Provider): Promise<[BN, BN]> {
+    let pairContract = new ethers.Contract(pair, pairIface, provider);
+    let reserves = await pairContract.functions.getReserves();
+    let reserve0 = BN.from(reserves._reserve0);
+    let reserve1 = BN.from(reserves._reserve1);
+    return [reserve0, reserve1];
+}
+
+export async function batchGetReserves(arbitragePairs: ArbitragePair[], provider: ethers.providers.Provider) {
+    let 
+    let promises: Promise<any>[] = [];
+    arbitragePairs.forEach(ap => {
+        let p0 = getReserves(ap.pair0, provider)
+            .then()
+    })
 }

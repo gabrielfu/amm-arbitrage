@@ -5,16 +5,16 @@ export interface Token {
 
 export interface Pair {
     readonly address: string;
-    readonly token0: Token;
-    readonly token1: Token;
+    readonly token0: string;
+    readonly token1: string;
 }
 
 /** Represents a pair of AMM pairs to perform arbitrage on for a pair of baseToken & quoteToken */
 export interface ArbitragePair {
-    readonly baseToken: string;
-    readonly quoteToken: string;
-    readonly pair0: string;
-    readonly pair1: string;
+    readonly baseToken: Token;
+    readonly quoteToken: Token;
+    readonly pair0: Pair;
+    readonly pair1: Pair;
 };
 
 export interface Factory {
