@@ -75,9 +75,11 @@ contract Arbitrage {
         (
             address baseToken, 
             address quoteToken,
+            address pair0,
+            address pair1,
             uint256 baseAmountIn,
             uint256 quoteAmount
-        ) = abi.decode(data, (address, address, uint256, uint256));
+        ) = abi.decode(data, (address, address, address, address, uint256, uint256));
 
         // swap base for quote in pair0 and repay pair1 in quote token
         TransferHelper.safeTransfer(baseToken, pair0, baseAmountIn);
