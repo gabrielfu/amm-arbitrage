@@ -13,7 +13,7 @@ library TransferHelper {
         );
         require(
             success && (data.length == 0 || abi.decode(data, (bool))),
-            "301"
+            "APPROVE_FAILED"
         );
     }
 
@@ -28,7 +28,7 @@ library TransferHelper {
         );
         require(
             success && (data.length == 0 || abi.decode(data, (bool))),
-            "302"
+            "TRANSFER_FAILED"
         );
     }
 
@@ -44,12 +44,12 @@ library TransferHelper {
         );
         require(
             success && (data.length == 0 || abi.decode(data, (bool))),
-            "303"
+            "TRANSFER_FROM_FAILED"
         );
     }
 
-    function safeTransferAVAX(address to, uint256 value) internal {
+    function safeTransferETH(address to, uint256 value) internal {
         (bool success, ) = to.call{value: value}(new bytes(0));
-        require(success, "304");
+        require(success, "TRANSFER_ETH_FAILED");
     }
 }
