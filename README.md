@@ -1,4 +1,30 @@
-# Uniswap V2 Arbitrage
+# Flash Swap Arbitrage on Constant Product AMMs
+
+## Important
+As with most open source arbitrage bots, this bot serves as a PoC only. 
+AMM arbitrage is very competitive and
+this bot will not be able to compete with real on-chain bots.
+
+## Introduction
+Due to a lack of an order book, automated market makers (AMM) rely heavily on 
+arbitrageurs to keep quote prices close to market prices.
+
+Thanks to the innovation of [flash swaps](https://docs.uniswap.org/protocol/V2/concepts/core-concepts/flash-swaps#capital-free-arbitrage), you can perform arbitrage transactions without the need of a starting capital.
+
+Also thanks to the atomic property of blockchain transactions, if there is any price movement after we submitted the transaction and before it is executed, we can revert the transaction and only pay the tranasction fees.
+
+## Usage
+To deploy the contract, run 
+```shell
+npx hardhat run scripts/deploy.ts
+```
+
+Then, update the contract address and Infura API key at `./config.ts`.
+
+Finally, run the bot
+```shell
+ts-node src/index.ts
+```
 
 ## Arbitrage Model
 Let's look at the pricing model for arbitraging in **constant product** AMMs such as Uniswap V2 and Sushiswap on Ethereum and most AMMs on other blockchains.
