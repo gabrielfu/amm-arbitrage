@@ -53,9 +53,9 @@ export function getFactories() {
 }
 
 /**
- * Initialize all available arbitrage pairs
- * @param provider 
- */
+* Initialize all available arbitrage pairs
+* @param provider 
+*/
 export async function initializePairs(provider: ethers.providers.Provider) {
     // form token pairs [token0, token1]
     let allTokenPairs: [Token, Token][] = [];
@@ -66,7 +66,7 @@ export async function initializePairs(provider: ethers.providers.Provider) {
             }
         });
     });
-
+    
     // for each token pair, we find all AMMs that support this pair
     // by calling the AMM factory getPair() method to get the pair address
     // and store the pair addresses in allAmms
@@ -78,13 +78,13 @@ export async function initializePairs(provider: ethers.providers.Provider) {
         factoryContracts.forEach(f => {
             let factoryContract = new ethers.Contract(f.address, factoryIface, provider);
             let p = factoryContract.functions.getPair(t0.address, t1.address)
-                .then((resp: string[]) => {
-                    let address: string = resp[0].toLowerCase();
-                    // if pair exists
-                    if (address != "0x0000000000000000000000000000000000000000") {
-                        allAmms[_i].push(address);
-                    };
-                });
+            .then((resp: string[]) => {
+                let address: string = resp[0].toLowerCase();
+                // if pair exists
+                if (address != "0x0000000000000000000000000000000000000000") {
+                    allAmms[_i].push(address);
+                };
+            });
             promises.push(p);
         });
     });
