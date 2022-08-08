@@ -75,7 +75,7 @@ export async function initializePairs(provider: ethers.providers.Provider) {
         factoryContracts.forEach(f => {
             let factoryContract = new ethers.Contract(f.address, factoryIface, provider);
             let p = factoryContract.functions.getPair(t0, t1)
-                .then((resp) => {
+                .then((resp: string[]) => {
                     let address: string = resp[0].toLowerCase();
                     // if pair exists
                     if (address != "0x0000000000000000000000000000000000000000") {
