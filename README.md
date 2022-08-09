@@ -14,12 +14,13 @@ Thanks to the innovation of [flash swaps](https://docs.uniswap.org/protocol/V2/c
 Also thanks to the atomic property of blockchain transactions, if there is any price movement after we submitted the transaction and before it is executed, we can revert the transaction and only pay the tranasction fees.
 
 ## Usage
-To deploy the contract, run 
-```shell
-npx hardhat run scripts/deploy.ts
-```
+First, input your Infura API key and account private keys in `./config.ts`.
 
-Then, update the contract address and Infura API key at `./config.ts`.
+To deploy the contract to the mainnet, run 
+```shell
+npx hardhat run --network mainnet scripts/deploy.ts
+```
+and update the contract address in `./config.ts`.
 
 Finally, run the bot
 ```shell
